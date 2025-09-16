@@ -317,16 +317,18 @@ for fcsth in fcsths:
     mapcrs = ccrs.PlateCarree()
     datacrs = mapcrs
     
-    plot_name = str(yyyymmdd_hh_fcst)+'.'+plot_type
+    plot_name = str(int(fcsth))+'.'+plot_type
     
     #plots
     
     #________PLOT 1________________
     if plot1:
+     new_dir = dir_figures+"refl/"
+     os.makedirs(new_dir, exist_ok=True)
+     plotagem = new_dir+plot_name
     
      starttime = time.time()
      plot_n="1"
-     plotagem = dir_figures+"refl_"+plot_name
     
      fig = plt.figure(figsize=(12, 12))
      ax = plt.axes(projection=datacrs)
@@ -392,9 +394,11 @@ for fcsth in fcsths:
     
     #________PLOT 2________________
     if plot2:
+     new_dir = dir_figures+"mucape/"
+     os.makedirs(new_dir, exist_ok=True)
+     plotagem = new_dir+plot_name
      starttime = time.time()
      plot_n="2"
-     plotagem = dir_figures+"mucape_"+plot_name
     
      fig = plt.figure(figsize=(12, 12))
      ax = plt.axes(projection=datacrs)
@@ -438,9 +442,12 @@ for fcsth in fcsths:
     
     #________PLOT 3________________
     if plot3:
+     new_dir = dir_figures+"t2m/"
+     os.makedirs(new_dir, exist_ok=True)
+     plotagem = new_dir+plot_name
+        
      starttime = time.time()
      plot_n="3"
-     plotagem = dir_figures+"t2m_"+plot_name
     
      fig = plt.figure(figsize=(12, 12))
      ax = plt.axes(projection=datacrs)
@@ -494,9 +501,13 @@ for fcsth in fcsths:
 
     #________PLOT 4________________
     if plot4:
+
+     new_dir = dir_figures+"vort_1km/"
+     os.makedirs(new_dir, exist_ok=True)
+     plotagem = new_dir+plot_name
+        
      starttime = time.time()
      plot_n="4"
-     plotagem = dir_figures+"vort_1km_"+plot_name
     
      fig = plt.figure(figsize=(12, 12))
      ax = plt.axes(projection=datacrs)
@@ -540,10 +551,11 @@ for fcsth in fcsths:
     
     #________PLOT 5________________
     if plot5:
-
+     new_dir = dir_figures+"total_precip/"
+     os.makedirs(new_dir, exist_ok=True)
+     plotagem = new_dir+plot_name
      starttime = time.time()
      plot_n="5"
-     plotagem = dir_figures+"total_precipitation_"+plot_name
     
      fig = plt.figure(figsize=(12, 12))
      ax = plt.axes(projection=datacrs)
@@ -598,10 +610,11 @@ for fcsth in fcsths:
 
     #________PLOT 6________________
     if plot6:
-
+     new_dir = dir_figures+"wind_vel/"
+     os.makedirs(new_dir, exist_ok=True)
+     plotagem = new_dir+plot_name
      starttime = time.time()
      plot_n="6"
-     plotagem = dir_figures+"velocidade_do_vento_"+plot_name
     
      fig = plt.figure(figsize=(12, 12))
      ax = plt.axes(projection=datacrs)
@@ -644,10 +657,11 @@ for fcsth in fcsths:
 
     #________PLOT 7________________
     if plot7:
-
+     new_dir = dir_figures+"precip_1h/"
+     os.makedirs(new_dir, exist_ok=True)
+     plotagem = new_dir+plot_name
      starttime = time.time()
      plot_n="7"
-     plotagem = dir_figures+"1h_precipitation_"+plot_name
     
      fig = plt.figure(figsize=(12, 12))
      ax = plt.axes(projection=datacrs)
@@ -702,9 +716,11 @@ for fcsth in fcsths:
 
     #________PLOT 8________________
     if plot8:
+     new_dir = dir_figures+"pw_3km/"
+     os.makedirs(new_dir, exist_ok=True)
+     plotagem = new_dir+plot_name
      starttime = time.time()
      plot_n="8"
-     plotagem = dir_figures+"pw_3km_"+plot_name
     
      fig = plt.figure(figsize=(12, 12))
      ax = plt.axes(projection=datacrs)
