@@ -85,7 +85,7 @@ def save_figure(fig: plt.Figure, output_path: Path) -> None:
     fig.tight_layout()
     fig.savefig(output_path)
     plt.close(fig)
-    trim_image(output_path)
+    #trim_image(output_path)
 
 
 def log_plot_time(plot_number: str, start_time: float) -> None:
