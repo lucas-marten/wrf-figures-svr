@@ -82,6 +82,7 @@ def trim_image(image_path: Path) -> None:
 
 
 def save_figure(fig: plt.Figure, output_path: Path) -> None:
+    print("Saving file: ", output_path)
     fig.tight_layout()
     fig.savefig(output_path)
     plt.close(fig)
