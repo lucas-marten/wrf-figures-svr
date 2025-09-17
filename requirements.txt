@@ -1,0 +1,8 @@
+cartopy==0.24.0
+matplotlib==3.9.2
+netCDF4==1.6.5
+numpy==1.26.4
+pyproj==3.6.1
+scipy==1.11.4
+Shapely==2.0.5
+wrf-python==1.4.0
