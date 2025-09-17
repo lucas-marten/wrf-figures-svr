@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import argparse
 import datetime
 import json
 import subprocess
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Dict, Iterable, Tuple
 
@@ -88,6 +89,18 @@ COLORMAP_FILES = {
 }
 
 
+PLOT_ARGUMENTS = {
+    "reflectivity": "plot_reflectivity",
+    "mucape": "plot_mucape",
+    "t2m": "plot_t2m",
+    "vorticity": "plot_vorticity",
+    "total_precip": "plot_total_precip",
+    "wind": "plot_wind_velocity",
+    "precip_1h": "plot_precip_1h",
+    "pw": "plot_pw",
+}
+
+
 @dataclass(frozen=True)
 class PlotConfig:
     plot_reflectivity: bool = True
@@ -157,6 +170,35 @@ class PlotContext:
     city_lons: np.ndarray
     city_lats: np.ndarray
     crepdecs_feature: ShapelyFeature | None = None
+
+
+def parse_arguments(argv: Iterable[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Gera figuras operacionais do WRF para diferentes variáveis meteorológicas.",
+    )
+    parser.add_argument(
+        "--plots",
+        nargs="+",
+        choices=sorted(PLOT_ARGUMENTS),
+        metavar="PLOT",
+        help=(
+            "Lista de plots a serem gerados. Caso não seja informado, todas as opções "
+            "serão processadas. Valores disponíveis: %(choices)s"
+        ),
+    )
+    return parser.parse_args(argv)
+
+
+def build_config_from_args(args: argparse.Namespace, base_config: PlotConfig | None = None) -> PlotConfig:
+    config = base_config or PlotConfig()
+    if args.plots is None:
+        return config
+
+    selected = set(args.plots)
+    overrides = {
+        attr_name: option in selected for option, attr_name in PLOT_ARGUMENTS.items()
+    }
+    return replace(config, **overrides)
 
 
 def load_listed_colormap(rgb_path: Path) -> ListedColormap:
@@ -875,10 +917,11 @@ def plot_pw(data: PlotData, context: PlotContext, metadata: ForecastMetadata) ->
     return fig
 
 
-def main() -> None:
+def main(argv: Iterable[str] | None = None) -> None:
     start_time_total = time.time()
 
-    config = PlotConfig()
+    args = parse_arguments(argv)
+    config = build_config_from_args(args)
     base_dir = Path(__file__).resolve().parent
     auxiliary_dir = base_dir / "arquivos_auxiliares"
     colors_dir = auxiliary_dir / "colors"
