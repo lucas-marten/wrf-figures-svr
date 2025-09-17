@@ -19,7 +19,7 @@ from .models import ForecastMetadata, PlotConfig, PlotContext, PlotData
 def create_map_axes(context: PlotContext, include_states: bool = True) -> tuple[plt.Figure, plt.Axes]:
     fig = plt.figure(figsize=(12, 12))
     ax = plt.axes(projection=context.datacrs)
-    ax.set_extent(context.extent, context.mapcrs)
+    #ax.set_extent(context.extent, context.mapcrs)
     add_base_features(ax, context, include_states=include_states)
     return fig, ax
 
