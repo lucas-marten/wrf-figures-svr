@@ -43,7 +43,7 @@ def resolve_raw_directory(args_raw_dir: str | None, target_date: dt.date) -> Pat
         base_path = Path(args_raw_dir).expanduser()
     else:
         base_path = Path("/storagefapesp/data/models/wrf/RAW")
-    return base_path / f"{target_date.year}" / f"{target_date.timetuple().tm_yday:03d}" / 00
+    return base_path / f"{target_date.year}" / f"{target_date.timetuple().tm_yday:03d}" / "00"
 
 
 def build_auxiliary_paths() -> tuple[Path, Path, Path]:
