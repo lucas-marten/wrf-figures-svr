@@ -101,6 +101,17 @@ PLOT_ARGUMENTS = {
 }
 
 
+def parse_run_date(value: str) -> datetime.date:
+    for fmt in ("%Y%m%d", "%Y-%m-%d"):
+        try:
+            return datetime.datetime.strptime(value, fmt).date()
+        except ValueError:
+            continue
+    raise argparse.ArgumentTypeError(
+        "Data de rodada inválida. Utilize os formatos YYYYMMDD ou YYYY-MM-DD."
+    )
+
+
 @dataclass(frozen=True)
 class PlotConfig:
     plot_reflectivity: bool = True
@@ -184,6 +195,14 @@ def parse_arguments(argv: Iterable[str] | None = None) -> argparse.Namespace:
         help=(
             "Lista de plots a serem gerados. Caso não seja informado, todas as opções "
             "serão processadas. Valores disponíveis: %(choices)s"
+        ),
+    )
+    parser.add_argument(
+        "--rodada",
+        type=parse_run_date,
+        help=(
+            "Data da rodada do modelo no formato YYYYMMDD ou YYYY-MM-DD. "
+            "Quando não informada, utiliza a data atual."
         ),
     )
     return parser.parse_args(argv)
@@ -931,15 +950,14 @@ def main(argv: Iterable[str] | None = None) -> None:
     crepdecs_feature = load_crepdecs_feature(auxiliary_dir / "crepdecs" / "CREPDECS_RS.shp")
     city_lats, city_lons = get_city_coordinates(CIDADES_RS)
 
-    today = datetime.datetime.today()
-    year = today.year
-    julian_day = today.timetuple().tm_yday
+    target_date = args.rodada or datetime.datetime.today().date()
+    year = target_date.year
+    julian_day = target_date.timetuple().tm_yday
 
     data_dir = Path(f"/storagefapesp/data/models/wrf/RAW/{year}/{julian_day:03d}")
     figures_dir = (base_dir / ".." / "figures" / f"{year}" / f"{julian_day:03d}").resolve()
     ensure_directory(figures_dir)
 
-    target_date = datetime.datetime(year, 1, 1) + datetime.timedelta(days=julian_day - 1)
     init_datetime = datetime.datetime(target_date.year, target_date.month, target_date.day, 12)
 
     domain = "d02"
