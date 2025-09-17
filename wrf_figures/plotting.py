@@ -417,36 +417,14 @@ def plot_total_precip(
 ) -> plt.Figure:
     fig, ax = create_map_axes(context)
 
-    clevs_precip = [
-        0.1,
-        1,
-        2,
-        3,
-        5,
-        7,
-        10,
-        15,
-        20,
-        30,
-        40,
-        50,
-        60,
-        70,
-        80,
-        90,
-        100,
-        125,
-        150,
-        175,
-        200,
-    ]
-    norm = BoundaryNorm(clevs_precip, context.colormaps["radar"].N)
+    clevs_precip = list(context.precip_levels)
+    norm = BoundaryNorm(clevs_precip, context.precip_colormap.N)
     shaded = ax.contourf(
         data.lons,
         data.lats,
         data.total_precip,
         clevs_precip,
-        cmap=context.colormaps["radar"],
+        cmap=context.precip_colormap,
         norm=norm,
         transform=context.mapcrs,
         zorder=1,
