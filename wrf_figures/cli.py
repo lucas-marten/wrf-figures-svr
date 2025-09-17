@@ -67,7 +67,7 @@ def orchestrate_plots(
     datacrs: ccrs.CRS,
     mapcrs: ccrs.CRS,
 ) -> None:
-    domain = "d02"
+    domain = "d01"
 
     for fcsth in FCSTHS:
         metadata = build_forecast_metadata(init_datetime, fcsth)
