@@ -52,6 +52,23 @@ def parse_arguments(argv: Iterable[str] | None = None) -> argparse.Namespace:
             "utiliza a convenção padrão em /storagefapesp/data/models/wrf/RAW."
         ),
     )
+    parser.add_argument(
+        "--dominio",
+        choices=("d01", "d02", "d03"),
+        default="d01",
+        help=(
+            "Domínio do modelo WRF a ser utilizado (d01, d02 ou d03). Quando não informado, "
+            "utiliza d01."
+        ),
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        help=(
+            "Diretório onde as figuras serão salvas. Quando não informado, utiliza o "
+            "padrão figures/ano/dia_juliano relativo ao repositório."
+        ),
+    )
     return parser.parse_args(argv)
 
 
