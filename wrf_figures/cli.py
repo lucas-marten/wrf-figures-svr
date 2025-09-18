@@ -56,6 +56,7 @@ def build_auxiliary_paths() -> tuple[Path, Path, Path]:
 def orchestrate_plots(
     raw_dir: Path,
     figures_dir: Path,
+    domain: str,
     config: PlotConfig,
     precip_levels: Iterable[float],
     precip_colormap: ListedColormap,
@@ -67,8 +68,6 @@ def orchestrate_plots(
     datacrs: ccrs.CRS,
     mapcrs: ccrs.CRS,
 ) -> None:
-    domain = "d01"
-
     for fcsth in FCSTHS:
         metadata = build_forecast_metadata(init_datetime, fcsth)
         dataset_path = raw_dir / f"wrfout_{domain}_{metadata.valid_datetime:%Y-%m-%d_%H}:00:00"
@@ -160,13 +159,16 @@ def main(argv: Iterable[str] | None = None) -> None:
     target_date = args.rodada or dt.datetime.today().date()
     raw_dir = resolve_raw_directory(args.raw_dir, target_date)
 
-    figures_dir = (
-        PROJECT_ROOT
-        / ".."
-        / "figures"
-        / f"{target_date.year}"
-        / f"{target_date.timetuple().tm_yday:03d}"
-    ).resolve()
+    if args.output_dir:
+        figures_dir = Path(args.output_dir).expanduser().resolve()
+    else:
+        figures_dir = (
+            PROJECT_ROOT
+            / ".."
+            / "figures"
+            / f"{target_date.year}"
+            / f"{target_date.timetuple().tm_yday:03d}"
+        ).resolve()
     ensure_directory(figures_dir)
 
     _, colors_dir, crepdecs_path = build_auxiliary_paths()
@@ -183,6 +185,7 @@ def main(argv: Iterable[str] | None = None) -> None:
     orchestrate_plots(
         raw_dir=raw_dir,
         figures_dir=figures_dir,
+        domain=args.dominio,
         config=config,
         precip_levels=precip_levels,
         precip_colormap=precip_colormap,
