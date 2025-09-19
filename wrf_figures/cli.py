@@ -16,7 +16,7 @@ from .data_processing import (
     collect_wrf_data,
     compute_map_extent,
 )
-from .models import PlotConfig, PlotContext
+from .models import ForecastMetadata, PlotConfig, PlotContext
 from .plotting import (
     log_plot_time,
     plot_mucape,
@@ -51,6 +51,10 @@ def build_auxiliary_paths() -> tuple[Path, Path, Path]:
     colors_dir = auxiliary_dir / "colors"
     crepdecs_path = auxiliary_dir / "crepdecs" / "CREPDECS_RS.shp"
     return auxiliary_dir, colors_dir, crepdecs_path
+
+
+def build_plot_filename(variable: str, metadata: ForecastMetadata, config: PlotConfig) -> str:
+    return f"{variable}_{metadata.valid_datetime:%Y%m%dT%H}.{config.plot_type}"
 
 
 def orchestrate_plots(
@@ -92,8 +96,6 @@ def orchestrate_plots(
             crepdecs_feature=crepdecs_feature,
         )
 
-        plot_name = f"{metadata.forecast_hour}.{config.plot_type}"
-
         print()
         print("________________________________________________________________________________")
         print(metadata.initialization_title)
@@ -104,49 +106,81 @@ def orchestrate_plots(
         if config.plot_reflectivity:
             starttime = time.time()
             fig = plot_reflectivity(data, context, metadata)
-            save_figure(fig, ensure_directory(figures_dir / "refl") / plot_name)
+            save_figure(
+                fig,
+                ensure_directory(figures_dir / "refl")
+                / build_plot_filename("refl", metadata, config),
+            )
             log_plot_time("1", starttime)
 
         if config.plot_mucape:
             starttime = time.time()
             fig = plot_mucape(data, context, metadata)
-            save_figure(fig, ensure_directory(figures_dir / "mucape") / plot_name)
+            save_figure(
+                fig,
+                ensure_directory(figures_dir / "mucape")
+                / build_plot_filename("mucape", metadata, config),
+            )
             log_plot_time("2", starttime)
 
         if config.plot_t2m:
             starttime = time.time()
             fig = plot_t2m(data, context, metadata)
-            save_figure(fig, ensure_directory(figures_dir / "t2m") / plot_name)
+            save_figure(
+                fig,
+                ensure_directory(figures_dir / "t2m")
+                / build_plot_filename("t2m", metadata, config),
+            )
             log_plot_time("3", starttime)
 
         if config.plot_vorticity:
             starttime = time.time()
             fig = plot_vorticity(data, context, metadata)
-            save_figure(fig, ensure_directory(figures_dir / "vort_1km") / plot_name)
+            save_figure(
+                fig,
+                ensure_directory(figures_dir / "vort_1km")
+                / build_plot_filename("vort_1km", metadata, config),
+            )
             log_plot_time("4", starttime)
 
         if config.plot_total_precip:
             starttime = time.time()
             fig = plot_total_precip(data, context, metadata)
-            save_figure(fig, ensure_directory(figures_dir / "total_precip") / plot_name)
+            save_figure(
+                fig,
+                ensure_directory(figures_dir / "total_precip")
+                / build_plot_filename("total_precip", metadata, config),
+            )
             log_plot_time("5", starttime)
 
         if config.plot_wind_velocity:
             starttime = time.time()
             fig = plot_wind_velocity(data, context, metadata)
-            save_figure(fig, ensure_directory(figures_dir / "wind_vel") / plot_name)
+            save_figure(
+                fig,
+                ensure_directory(figures_dir / "wind_vel")
+                / build_plot_filename("wind_vel", metadata, config),
+            )
             log_plot_time("6", starttime)
 
         if config.plot_precip_1h:
             starttime = time.time()
             fig = plot_precip_1h(data, context, metadata)
-            save_figure(fig, ensure_directory(figures_dir / "precip_1h") / plot_name)
+            save_figure(
+                fig,
+                ensure_directory(figures_dir / "precip_1h")
+                / build_plot_filename("precip_1h", metadata, config),
+            )
             log_plot_time("7", starttime)
 
         if config.plot_pw:
             starttime = time.time()
             fig = plot_pw(data, context, metadata)
-            save_figure(fig, ensure_directory(figures_dir / "pw_3km") / plot_name)
+            save_figure(
+                fig,
+                ensure_directory(figures_dir / "pw_3km")
+                / build_plot_filename("pw_3km", metadata, config),
+            )
             log_plot_time("8", starttime)
 
 
